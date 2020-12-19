@@ -13,7 +13,7 @@ import {
 
 import formatValue from '../../utils/formatValue';
 
-import { useCart, Product } from '../../hooks/cart';
+import { useCart } from '../../hooks/cart';
 
 // Calculo do total
 interface Balance {
@@ -27,31 +27,19 @@ const FloatingCart: React.FC = () => {
   const navigation = useNavigation();
 
   const cartTotal = useMemo(() => {
-    const { total } = products.reduce(
-      (balance: Balance, product: Product) => {
-        balance.total += product.price * product.quantity;
+    const total = products.reduce((accumulator, product) => {
+      const productSubtotal = product.price * product.quantity;
 
-        return balance;
-      },
-      {
-        total: 0,
-      },
-    );
+      return accumulator + productSubtotal;
+    }, 0);
 
     return formatValue(total);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
-    const { total } = products.reduce(
-      (balance: Balance, product: Product) => {
-        balance.total += product.quantity;
-
-        return balance;
-      },
-      {
-        total: 0,
-      },
-    );
+    const total = products.reduce((accumulator, product) => {
+      return accumulator + product.quantity;
+    }, 0);
 
     return total;
   }, [products]);
